@@ -3,8 +3,8 @@ public class Board {
 
     public Board() {};
     public Board(int size) {
-        String[][] board = createBoard(size);
-        this.board = initializeBoard(board);
+        this.board = createBoard(size);
+        initializeBoard(board);
     }
 
     public String[][] createBoard(int size) {
@@ -12,7 +12,7 @@ public class Board {
         return board;
     }
 
-    public String[][] initializeBoard(String[][] board) {
+    public void initializeBoard(String[][] board) {
         int center = board.length / 2 - 1;
 
         for(int row = 0; row < board.length; ++row) {
@@ -26,8 +26,6 @@ public class Board {
                 }
             }
         }
-
-        return board;
     }
 
     public void displayBoard() {

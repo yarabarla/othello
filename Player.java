@@ -7,7 +7,7 @@ public abstract class Player {
         this.color = color;
     }
 
-    public void move(Integer[] coordinates, Board board) {
+    protected void move(Integer[] coordinates, Board board) {
         boolean moveValid = false;
         Integer[][] legalMoves = board.getLegalMoves();
 
@@ -22,4 +22,6 @@ public abstract class Player {
             System.out.println("Invalid move. ");
         }
     }
+
+    public abstract void makeMove(Board board);
 }

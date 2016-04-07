@@ -9,7 +9,7 @@ public abstract class Player {
 
     protected void move(Integer[] coordinates, Board board) {
         boolean moveValid = false;
-        Integer[][] legalMoves = board.getLegalMoves();
+        Integer[][] legalMoves = board.getLegalMoves(this.color);
 
         for (Integer[] move : legalMoves) {
             if (move[0] == coordinates[0] && move[1] == coordinates[1]) {

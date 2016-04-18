@@ -89,9 +89,11 @@ class Searcher {
     public ArrayList<Integer[]> checkAxes(int[] coordinate) {
         
         ArrayList<Integer[]> verticalMoves = checkVerticalAxis(coordinate);
-/*        for(Integer[] i : verticalMoves) {
+        ArrayList<Integer[]> horizontalMoves = checkHorizontalAxis(coordinate);
+        verticalMoves.addAll(horizontalMoves);
+        for(Integer[] i : verticalMoves) {
             System.out.println(Arrays.toString(i));
-        }*/
+        }
         return verticalMoves;
     }
 
@@ -116,6 +118,30 @@ class Searcher {
         }
 
         return validMoves;
+    }
+
+    private ArrayList<Integer[]> checkHorizontalAxis(int[] coordinate) {
+        int size = this.board.length;
+        int rowIndex = coordinate[0];
+        String piece = this.board[coordinate[0]][coordinate[1]];
+        Integer[][] left = new Integer[coordinate[0]][2];
+        Integer[][] right = new Integer[size - coordinate[0] - 1][2];
+
+        for (int col = 0; col < size; ++col) {
+            Integer[] coor = {rowIndex, col};
+
+            if (col < coordinate[0]) {
+                left[left.length - col - 1] = coor;
+            } else if (col > coordinate[0]) {
+                right[col - left.length - 1] = coor;
+            }
+        }
+
+        ArrayList<Integer[]> leftValidMoves = checkVector(piece, left);
+        ArrayList<Integer[]> rightValidMoves = checkVector(piece, right);
+       
+        leftValidMoves.addAll(rightValidMoves);
+        return leftValidMoves;
     }
 
     private ArrayList<Integer[]> checkVerticalAxis(int[] coordinate) {

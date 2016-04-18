@@ -89,13 +89,60 @@ class Searcher {
     public ArrayList<Integer[]> checkAxes(int[] coordinate) {
         
         ArrayList<Integer[]> verticalMoves = checkVerticalAxis(coordinate);
-        for(Integer[] i : verticalMoves) {
+/*        for(Integer[] i : verticalMoves) {
             System.out.println(Arrays.toString(i));
-        }
+        }*/
         return verticalMoves;
     }
 
+    private ArrayList<Integer[]> checkVector(String piece, Integer[][] vector) {
+        ArrayList<Integer[]> validMoves = new ArrayList<Integer[]>();
+
+        for (int coorIndex = 0; coorIndex < vector.length; ++coorIndex) {
+            Integer[] currentPos = vector[coorIndex];
+            String currentPiece = this.board[currentPos[0]][currentPos[1]];
+
+            if (currentPiece == piece) {
+                break;
+            }
+
+            if (currentPiece == "_") {
+                if (coorIndex != 0) {
+                    validMoves.add(currentPos);
+                }
+
+                break;
+            }
+        }
+
+        return validMoves;
+    }
+
     private ArrayList<Integer[]> checkVerticalAxis(int[] coordinate) {
+        int size = this.board.length;
+        int columnIndex = coordinate[1];
+        String piece = this.board[coordinate[0]][coordinate[1]];
+        Integer[][] upper = new Integer[coordinate[0]][2];
+        Integer[][] lower = new Integer[size - coordinate[0] - 1][2];
+
+        for (int row = 0; row < size; ++row) {
+            Integer[] coor = {row, columnIndex};
+
+            if (row < coordinate[0]) {
+                upper[upper.length - row - 1] = coor;
+            } else if (row > coordinate[0]) {
+                lower[row - upper.length - 1] = coor;
+            }
+        }
+
+        ArrayList<Integer[]> upperValidMoves = checkVector(piece, upper);
+        ArrayList<Integer[]> lowerValidMoves = checkVector(piece, lower);
+       
+        upperValidMoves.addAll(lowerValidMoves);
+        return upperValidMoves;
+    }
+
+/*    private ArrayList<Integer[]> checkVerticalAxis(int[] coordinate) {
         String coorLocation = this.board[coordinate[0]][coordinate[1]];
         int size = this.board.length;
         int columnIndex = coordinate[1];
@@ -147,5 +194,5 @@ class Searcher {
         }
 
         return validMoves;
-    }
+    }*/
 }

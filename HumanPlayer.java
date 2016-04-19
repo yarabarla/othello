@@ -1,3 +1,8 @@
+/*
+Akhilesh Yarabarla- CS 2336.001
+
+HumanPlayer is a subclass of Player. It's implemented makeMove() method gets user input for a move and attempts to actually move the piece on the board by calling move(). User input is taken until valid input is received.
+*/
 import java.util.Scanner;
 public class HumanPlayer extends Player {
     HumanPlayer() {};

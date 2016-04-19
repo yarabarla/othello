@@ -1,3 +1,10 @@
+/*
+Akhilesh Yarabarla- CS 2336.001
+
+The game class runs the main game. It first gets the board size from the user and creates the board. There is also a menu to choose computer vs player, pvp, etc. The game loop runs until there aren't any legal moves for a player or until the board is full.
+
+To run the entire game, you just have to compile all the files and then run 'java Game'.
+*/
 import java.util.Scanner;
 public class Game {
     public static void main(String[] args) {

@@ -1,3 +1,7 @@
+/*
+Akhilesh Yarabarla- CS 2336.001
+The public Board class is a representation of the game board. Two methods create and initialize the starting position of the board.  Note: it can handle odd sized boards. The changePositions() method provides a public way of mutating the board. There are other utility methods that display the board, get the score, etc. The getLegalMoves and getFlips methods both use a searcher object to search the board for the desired list of coordinates. The search class has methods that call a function to get a list of vectors, which are paths radiating outward from a given coordinate. These vectors can be used by functions to get legal moves or to calculate which pieces need to be flipped from a given coordinate.
+*/
 import java.util.Arrays;
 import java.util.ArrayList;
 public class Board {
@@ -42,9 +46,6 @@ public class Board {
         Integer[][] legalMoves = new Integer[legalList.size()][legalList.size()];
         legalMoves = legalList.toArray(legalMoves);
 
-/*        for (Integer[] item : legalMoves) {
-            System.out.println(Arrays.toString(item));
-        }*/
         return legalMoves;
     }
 
@@ -116,31 +117,25 @@ class Searcher {
     }
 
     public ArrayList<Integer[]> findLegalMoves() {
-        ArrayList<Integer[]> validMoves = new ArrayList<Integer[]>();
+    // Iterate through board to find all the pieces that belong to the current player.
+    // The resulting coordinates are used to actually get the list of valid moves.
+        ArrayList<Integer[]> thisPieceList = new ArrayList<Integer[]>();
 
         for (int row = 0; row < board.length; ++row) {
             for (int col = 0; col < board.length; ++col) {
                 Integer[] coor = new Integer[]{new Integer(row), new Integer(col)};
                 if (board[row][col] == color) {
-                    validMoves.addAll(checkAxes(coor));
+                    thisPieceList.addAll(checkAxes(coor));
                 }
             }
         }
 
-        return validMoves;
+        return thisPieceList;
     }
 
-    public ArrayList<Integer[]> checkAxes(Integer[] coordinate) {
-        
-        ArrayList<Integer[]> cardinalMoves = checkCardinalAxis(coordinate);
-/*        for (Integer[] item : cardinalMoves) {
-            System.out.println("Card: " + Arrays.toString(item));
-        }*/
-
-        return cardinalMoves;
-    }
-
-    private ArrayList<Integer[]> checkCardinalAxis(Integer[] coordinate) {
+    private ArrayList<Integer[]> checkAxes(Integer[] coordinate) {
+    // Checks each axis radiating from the coordinate for valid moves and returns the
+    // entire list of legal moves.
         String piece = board[coordinate[0]][coordinate[1]];
 
         ArrayList<Integer[][]> vectors = new ArrayList<Integer[][]>();
@@ -148,7 +143,7 @@ class Searcher {
         ArrayList<Integer[]> validMoves = new ArrayList<Integer[]>();
 
         for(Integer[][] vector : vectors) {
-            validMoves.addAll(checkVector(piece, vector));
+            validMoves.addAll(checkForValidMoves(piece, vector));
         }
 
         return validMoves;
@@ -156,6 +151,7 @@ class Searcher {
 
 
     public ArrayList<Integer[]> getFlippablePieces(Integer[] coordinate) {
+    // Finds all the pieces that need to be flipped after a move
         String piece = board[coordinate[0]][coordinate[1]];
 
         ArrayList<Integer[][]> vectors = new ArrayList<Integer[][]>();
@@ -170,6 +166,8 @@ class Searcher {
     }
 
     private ArrayList<Integer[][]> getVectors(Integer[] coordinate) {
+    // Fills up each vector that lead out from a coordinate with index 0 being the 
+    // closest to the given coordinate
         int size = board.length;
         int rowIndex = coordinate[0];
         int columnIndex = coordinate[1];
@@ -205,7 +203,8 @@ class Searcher {
         return vectors;
     }
 
-    private ArrayList<Integer[]> checkVector(String piece, Integer[][] vector) {
+    private ArrayList<Integer[]> checkForValidMoves (String piece, Integer[][] vector) {
+    // Finds all the valid moves for a vector
         ArrayList<Integer[]> validMoves = new ArrayList<Integer[]>();
 
         for (int coorIndex = 0; coorIndex < vector.length; ++coorIndex) {
@@ -229,6 +228,7 @@ class Searcher {
     }
 
     private ArrayList<Integer[]> checkForFlips(String piece, Integer[][] vector) {
+    // Finds all the valid flips for a vector and move coordinate
         ArrayList<Integer[]> flipMoves = new ArrayList<Integer[]>();
 
         for (int coorIndex = 0; coorIndex < vector.length; ++coorIndex) {

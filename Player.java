@@ -1,3 +1,8 @@
+/*
+Akhilesh Yarabarla- CS 2336.001
+
+The abstract player class can be inherited by either a computer player or a human player. It has a method move() that takes a coordinate and check to see if it is a valid move. If so, it applies the move to the board and flips any intermediate squares as well. The abstract method makeMove() is used by subclasses to implement how they choose their moves.
+*/
 import java.util.Arrays;
 public abstract class Player {
     public String color;
@@ -12,7 +17,8 @@ public abstract class Player {
         Integer[][] legalMoves = board.getLegalMoves(this.color);
 
         for (Integer[] move : legalMoves) {
-            if (move[0] == coordinates[0] && move[1] == coordinates[1]) {
+            boolean isLegalMove = move[0] == coordinates[0] && move[1] == coordinates[1];
+            if (isLegalMove) {
                 board.changePosition(coordinates, this.color);
                 System.out.println("\nSuccess: " + this.color + " move at " + Arrays.toString(coordinates) + "\n");
                 Integer[][] flips = board.getFlips(coordinates);
@@ -29,7 +35,6 @@ public abstract class Player {
         }
 
         return moveValid;
-//        System.out.println(Arrays.toString(coordinates));
     }
 
     public abstract void makeMove(Board board);

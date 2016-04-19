@@ -10,6 +10,9 @@ public class ComputerPlayer extends Player {
 
     public void makeMove(Board board) {
         Integer[] newMove = strategy.getMove(board, this.color);
+        if (newMove[0] == -1 && newMove[1] == -1) {
+            return;
+        }
         move(newMove, board);
     }
 }
@@ -23,6 +26,11 @@ class RandomStrategy implements ChoosingStrategy {
     public Integer[] getMove(Board board, String color) {
         Random generator = new Random();
         Integer[][] legalMoves = board.getLegalMoves(color);
+        System.out.println(color + " legalMovesLength: " + legalMoves.length);
+        if (legalMoves.length == 0) {
+            Integer[] noMove = {new Integer(-1), new Integer(-1)};
+            return noMove;
+        }
         int moveIndex = generator.nextInt(legalMoves.length);
         return legalMoves[moveIndex];
     }

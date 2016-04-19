@@ -25,6 +25,7 @@ public abstract class Player {
         if (!moveValid) {
             System.out.println("Invalid move. ");
         }
+        System.out.println(Arrays.toString(coordinates));
     }
 
     public abstract void makeMove(Board board);

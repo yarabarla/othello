@@ -62,9 +62,20 @@ public class Board {
         return board;
     }
 
+    public boolean isFull() {
+        for (String[] row : board) {
+            for (String position : row) {
+                if (position == "_") {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public void displayBoard() {
-        for(String[] row : board) {
-            for(String position : row) {
+        for (String[] row : board) {
+            for (String position : row) {
                 System.out.print(position);
             }
             System.out.println();
@@ -202,14 +213,18 @@ class Searcher {
 
     private ArrayList<Integer[]> checkFlips(String piece, Integer[][] vector) {
         ArrayList<Integer[]> flipMoves = new ArrayList<Integer[]>();
+        System.out.println();
 
         for (int coorIndex = 0; coorIndex < vector.length; ++coorIndex) {
             Integer[] currentPos = vector[coorIndex];
             String currentPiece = board[currentPos[0]][currentPos[1]];
 
-            if (currentPiece == piece || currentPiece == "_") {
+            if (currentPiece == "_" && flipMoves.) {
+                return new ArrayList<Integer[]>();
+            } else if (currentPiece == piece) {
                 break;
             } else {
+                System.out.println("Flip?: " + Arrays.toString(currentPos));
                 flipMoves.add(currentPos);
             }
         }

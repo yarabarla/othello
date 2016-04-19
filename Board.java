@@ -88,13 +88,11 @@ class Searcher {
 
     public ArrayList<Integer[]> checkAxes(int[] coordinate) {
         
-        ArrayList<Integer[]> verticalMoves = checkVerticalAxis(coordinate);
-        ArrayList<Integer[]> horizontalMoves = checkHorizontalAxis(coordinate);
-        verticalMoves.addAll(horizontalMoves);
-        for(Integer[] i : verticalMoves) {
+        ArrayList<Integer[]> cardinalMoves = checkCardinalAxis(coordinate);
+        for(Integer[] i : cardinalMoves) {
             System.out.println(Arrays.toString(i));
         }
-        return verticalMoves;
+        return cardinalMoves;
     }
 
     private ArrayList<Integer[]> checkVector(String piece, Integer[][] vector) {
@@ -120,105 +118,40 @@ class Searcher {
         return validMoves;
     }
 
-    private ArrayList<Integer[]> checkHorizontalAxis(int[] coordinate) {
+    private ArrayList<Integer[]> checkCardinalAxis(int[] coordinate) {
         int size = this.board.length;
         int rowIndex = coordinate[0];
+        int columnIndex = coordinate[1];
         String piece = this.board[coordinate[0]][coordinate[1]];
         Integer[][] left = new Integer[coordinate[0]][2];
         Integer[][] right = new Integer[size - coordinate[0] - 1][2];
-
-        for (int col = 0; col < size; ++col) {
-            Integer[] coor = {rowIndex, col};
-
-            if (col < coordinate[0]) {
-                left[left.length - col - 1] = coor;
-            } else if (col > coordinate[0]) {
-                right[col - left.length - 1] = coor;
-            }
-        }
-
-        ArrayList<Integer[]> leftValidMoves = checkVector(piece, left);
-        ArrayList<Integer[]> rightValidMoves = checkVector(piece, right);
-       
-        leftValidMoves.addAll(rightValidMoves);
-        return leftValidMoves;
-    }
-
-    private ArrayList<Integer[]> checkVerticalAxis(int[] coordinate) {
-        int size = this.board.length;
-        int columnIndex = coordinate[1];
-        String piece = this.board[coordinate[0]][coordinate[1]];
         Integer[][] upper = new Integer[coordinate[0]][2];
         Integer[][] lower = new Integer[size - coordinate[0] - 1][2];
 
-        for (int row = 0; row < size; ++row) {
-            Integer[] coor = {row, columnIndex};
+        for (int i = 0; i < size; ++i) {
+            Integer[] horizontalCoor = {rowIndex, i};
+            Integer[] verticalCoor = {i, columnIndex};
 
-            if (row < coordinate[0]) {
-                upper[upper.length - row - 1] = coor;
-            } else if (row > coordinate[0]) {
-                lower[row - upper.length - 1] = coor;
+            if (i < coordinate[0]) {
+                left[left.length - i - 1] = horizontalCoor;
+                upper[upper.length - i - 1] = verticalCoor;
+            } else if (i > coordinate[0]) {
+                right[i - left.length - 1] = horizontalCoor;
+                lower[i - upper.length - 1] = verticalCoor;
             }
         }
 
+        ArrayList<Integer[]> validMoves = new ArrayList<Integer[]>();
+        ArrayList<Integer[]> leftValidMoves = checkVector(piece, left);
+        ArrayList<Integer[]> rightValidMoves = checkVector(piece, right);
         ArrayList<Integer[]> upperValidMoves = checkVector(piece, upper);
         ArrayList<Integer[]> lowerValidMoves = checkVector(piece, lower);
        
-        upperValidMoves.addAll(lowerValidMoves);
-        return upperValidMoves;
-    }
-
-/*    private ArrayList<Integer[]> checkVerticalAxis(int[] coordinate) {
-        String coorLocation = this.board[coordinate[0]][coordinate[1]];
-        int size = this.board.length;
-        int columnIndex = coordinate[1];
-        String[] vertical = new String[size];
-        String[] upperVertical = new String[coordinate[0] + 1];
-        String[] lowerVertical = new String[size - coordinate[0] + 1];
-        ArrayList<Integer[]> validMoves = new ArrayList<Integer[]>();
-
-        for (int row = 0; row < size; ++row) {
-            vertical[row] = this.board[row][columnIndex];
-        }
-
-        for (int row = 0; row < size; ++row) {
-            if (row < coordinate[0]) {
-                upperVertical[row] = vertical[row];
-            } else if (row > coordinate[0]) {
-                lowerVertical[row - upperVertical.length] = vertical[row];
-            }
-        }
-
-        for (int row = upperVertical.length - 1; row >= 0; --row) {
-            if (upperVertical[row] == coorLocation) {
-                break;
-            }
-
-            if (upperVertical[row] == "_") {
-                if (row != upperVertical.length - 1) {
-                    Integer[] move = {new Integer(row), new Integer(columnIndex)};
-                    validMoves.add(move);
-                }
-
-                break;
-            }
-        }
-
-        for (int row = 0; row < lowerVertical.length; ++row) {
-            if (lowerVertical[row] == coorLocation) {
-                break;
-            }
-
-            if (lowerVertical[row] == "_") {
-                if (row != 0) {
-                    Integer[] move = {new Integer(row + upperVertical.length), new Integer(columnIndex)};
-                    validMoves.add(move);
-                }
-
-                break;
-            }
-        }
+        validMoves.addAll(leftValidMoves);
+        validMoves.addAll(rightValidMoves);
+        validMoves.addAll(upperValidMoves);
+        validMoves.addAll(lowerValidMoves);
 
         return validMoves;
-    }*/
+    }
 }

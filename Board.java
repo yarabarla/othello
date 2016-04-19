@@ -35,30 +35,15 @@ public class Board {
     }
 
     public Integer[][] getLegalMoves(String color) {
-//        Integer[][] legalMoves = {{0,0}, {2, 3}, {0, 1}};
         ArrayList<Integer[]> legalList = new ArrayList<Integer[]>();
-/*        for (int row = 0; row < this.board.length; ++row) {
-            for (int column = 0; column < this.board.length; ++column) {
-                if (this.board[row][column] == "_") {
-
-                }
-            }
-        }*/
-        int[] mover = {2, 2};
         Searcher searcher = new Searcher(color, this);
-        searcher.checkAxes(mover);
-        Integer[] move = {new Integer(0), new Integer(0)};
-        legalList.add(move);
-        legalList.add(new Integer[]{new Integer(5), new Integer(4)});
+        legalList = searcher.findLegalMoves();
 
         Integer[][] legalMoves = new Integer[legalList.size()][legalList.size()];
         legalMoves = legalList.toArray(legalMoves);
-/*        for (Integer[] item : legalMoves) {
-            for(Integer num : item) {
-                System.out.print(num);
-            }
-            System.out.println();
-        }*/
+        for (Integer[] item : legalMoves) {
+            System.out.println(Arrays.toString(item));
+        }
         return legalMoves;
     }
 
@@ -86,12 +71,24 @@ class Searcher {
         this.board = board.getBoardStructure();
     }
 
+    public ArrayList<Integer[]> findLegalMoves() {
+        ArrayList<Integer[]> validMoves = new ArrayList<Integer[]>();
+
+        for (int row = 0; row < this.board.length; ++row) {
+            for (int col = 0; col < this.board.length; ++col) {
+                int[] coor = {row, col};
+                if (this.board[row][col] == this.color) {
+                    validMoves.addAll(checkAxes(coor));
+                }
+            }
+        }
+
+        return validMoves;
+    }
+
     public ArrayList<Integer[]> checkAxes(int[] coordinate) {
         
         ArrayList<Integer[]> cardinalMoves = checkCardinalAxis(coordinate);
-        for(Integer[] i : cardinalMoves) {
-            System.out.println(Arrays.toString(i));
-        }
         return cardinalMoves;
     }
 

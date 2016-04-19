@@ -31,7 +31,7 @@ public class Board {
     }
 
     public void changePosition(Integer[] coordinates, String newPiece) {
-        this.board[coordinates[0]][coordinates[1]] = newPiece;
+        board[coordinates[0]][coordinates[1]] = newPiece;
     }
 
     public Integer[][] getLegalMoves(String color) {
@@ -41,18 +41,29 @@ public class Board {
 
         Integer[][] legalMoves = new Integer[legalList.size()][legalList.size()];
         legalMoves = legalList.toArray(legalMoves);
-        for (Integer[] item : legalMoves) {
+/*        for (Integer[] item : legalMoves) {
             System.out.println(Arrays.toString(item));
-        }
+        }*/
         return legalMoves;
     }
 
+    public Integer[][] getFlips(Integer[] coor) {
+        String piece = board[coor[0]][coor[1]];
+        ArrayList<Integer[]> flips = new ArrayList<Integer[]>();
+        Searcher searcher = new Searcher(piece, this);
+        flips = searcher.flipPieces(coor);
+
+        Integer[][] validFlips = new Integer[flips.size()][flips.size()];
+        validFlips = flips.toArray(validFlips);
+        return validFlips;
+    }
+
     public String[][] getBoardStructure() {
-        return this.board;
+        return board;
     }
 
     public void displayBoard() {
-        for(String[] row : this.board) {
+        for(String[] row : board) {
             for(String position : row) {
                 System.out.print(position);
             }
@@ -74,10 +85,10 @@ class Searcher {
     public ArrayList<Integer[]> findLegalMoves() {
         ArrayList<Integer[]> validMoves = new ArrayList<Integer[]>();
 
-        for (int row = 0; row < this.board.length; ++row) {
-            for (int col = 0; col < this.board.length; ++col) {
+        for (int row = 0; row < board.length; ++row) {
+            for (int col = 0; col < board.length; ++col) {
                 int[] coor = {row, col};
-                if (this.board[row][col] == this.color) {
+                if (board[row][col] == color) {
                     validMoves.addAll(checkAxes(coor));
                 }
             }
@@ -97,7 +108,7 @@ class Searcher {
 
         for (int coorIndex = 0; coorIndex < vector.length; ++coorIndex) {
             Integer[] currentPos = vector[coorIndex];
-            String currentPiece = this.board[currentPos[0]][currentPos[1]];
+            String currentPiece = board[currentPos[0]][currentPos[1]];
 
             if (currentPiece == piece) {
                 break;
@@ -116,10 +127,10 @@ class Searcher {
     }
 
     private ArrayList<Integer[]> checkCardinalAxis(int[] coordinate) {
-        int size = this.board.length;
+        int size = board.length;
         int rowIndex = coordinate[0];
         int columnIndex = coordinate[1];
-        String piece = this.board[coordinate[0]][coordinate[1]];
+        String piece = board[coordinate[0]][coordinate[1]];
         Integer[][] left = new Integer[coordinate[0]][2];
         Integer[][] right = new Integer[size - coordinate[0] - 1][2];
         Integer[][] upper = new Integer[coordinate[0]][2];
@@ -150,5 +161,59 @@ class Searcher {
         validMoves.addAll(lowerValidMoves);
 
         return validMoves;
+    }
+
+    public ArrayList<Integer[]> flipPieces(Integer[] coordinate) {
+        int size = board.length;
+        int rowIndex = coordinate[0];
+        int columnIndex = coordinate[1];
+        String piece = board[coordinate[0]][coordinate[1]];
+        Integer[][] left = new Integer[coordinate[0]][2];
+        Integer[][] right = new Integer[size - coordinate[0] - 1][2];
+        Integer[][] upper = new Integer[coordinate[0]][2];
+        Integer[][] lower = new Integer[size - coordinate[0] - 1][2];
+
+        for (int i = 0; i < size; ++i) {
+            Integer[] horizontalCoor = {rowIndex, i};
+            Integer[] verticalCoor = {i, columnIndex};
+
+            if (i < coordinate[0]) {
+                left[left.length - i - 1] = horizontalCoor;
+                upper[upper.length - i - 1] = verticalCoor;
+            } else if (i > coordinate[0]) {
+                right[i - left.length - 1] = horizontalCoor;
+                lower[i - upper.length - 1] = verticalCoor;
+            }
+        }
+
+        ArrayList<Integer[]> validFlips = new ArrayList<Integer[]>();
+        ArrayList<Integer[]> leftValidFlips = checkFlips(piece, left);
+        ArrayList<Integer[]> rightValidFlips = checkFlips(piece, right);
+        ArrayList<Integer[]> upperValidFlips = checkFlips(piece, upper);
+        ArrayList<Integer[]> lowerValidFlips = checkFlips(piece, lower);
+
+        validFlips.addAll(leftValidFlips);
+        validFlips.addAll(rightValidFlips);
+        validFlips.addAll(upperValidFlips);
+        validFlips.addAll(lowerValidFlips);
+
+        return validFlips;
+    }
+
+    private ArrayList<Integer[]> checkFlips(String piece, Integer[][] vector) {
+        ArrayList<Integer[]> flipMoves = new ArrayList<Integer[]>();
+
+        for (int coorIndex = 0; coorIndex < vector.length; ++coorIndex) {
+            Integer[] currentPos = vector[coorIndex];
+            String currentPiece = board[currentPos[0]][currentPos[1]];
+
+            if (currentPiece == piece || currentPiece == "_") {
+                break;
+            } else {
+                flipMoves.add(currentPos);
+            }
+        }
+
+        return flipMoves;
     }
 }

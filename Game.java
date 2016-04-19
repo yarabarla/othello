@@ -5,11 +5,9 @@ public class Game {
     }
 
     public static void startGame() {
-        Board game = new Board(5);
+        int boardSize = getBoardSize();
+        Board game = new Board(boardSize);
 
-//        Player player1 = new ComputerPlayer("B", new RandomStrategy());
-//        Player player1 = new HumanPlayer("B");
-//        Player player2 = new HumanPlayer("W");
         Player[] players = getPlayers();
         Player player1 = players[0];
         Player player2 = players[1];
@@ -71,5 +69,15 @@ public class Game {
         }
 
         return new Player[]{player1, player2};
+    }
+
+    public static int getBoardSize() {
+        System.out.print("What size is the board: ");
+        Scanner input = new Scanner(System.in);
+        int size = input.nextInt();
+        System.out.println();
+
+        return size;
+
     }
 }

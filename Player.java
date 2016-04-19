@@ -7,13 +7,14 @@ public abstract class Player {
         this.color = color;
     }
 
-    protected void move(Integer[] coordinates, Board board) {
+    protected boolean move(Integer[] coordinates, Board board) {
         boolean moveValid = false;
         Integer[][] legalMoves = board.getLegalMoves(this.color);
 
         for (Integer[] move : legalMoves) {
             if (move[0] == coordinates[0] && move[1] == coordinates[1]) {
                 board.changePosition(coordinates, this.color);
+                System.out.println("\nSuccess: " + this.color + " move at " + Arrays.toString(coordinates) + "\n");
                 Integer[][] flips = board.getFlips(coordinates);
 
                 for (Integer[] flip : flips) {
@@ -26,6 +27,8 @@ public abstract class Player {
         if (!moveValid) {
             System.out.println("Invalid move. ");
         }
+
+        return moveValid;
 //        System.out.println(Arrays.toString(coordinates));
     }
 

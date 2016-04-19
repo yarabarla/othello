@@ -41,6 +41,7 @@ public class Board {
 
         Integer[][] legalMoves = new Integer[legalList.size()][legalList.size()];
         legalMoves = legalList.toArray(legalMoves);
+
 /*        for (Integer[] item : legalMoves) {
             System.out.println(Arrays.toString(item));
         }*/
@@ -80,6 +81,27 @@ public class Board {
             }
             System.out.println();
         }
+    }
+
+    private int[] getScore() {
+        int whiteCount = 0; 
+        int blackCount = 0;
+        for (String[] row : board) {
+            for (String position : row) {
+                if (position == "W") {
+                    whiteCount++;
+                } else if (position == "B") {
+                    blackCount++;
+                }
+            }
+        }
+
+        return new int[]{blackCount, whiteCount};
+    }
+
+    public void printScore() {
+        int[] score = getScore();
+        System.out.println("\nScore: Black: " + score[0] + ", White: " + score[1]);
     }
 }
 

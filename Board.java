@@ -111,6 +111,10 @@ class Searcher {
     public ArrayList<Integer[]> checkAxes(int[] coordinate) {
         
         ArrayList<Integer[]> cardinalMoves = checkCardinalAxis(coordinate);
+/*        for (Integer[] item : cardinalMoves) {
+            System.out.println("Card: " + Arrays.toString(item));
+        }*/
+
         return cardinalMoves;
     }
 
@@ -141,22 +145,27 @@ class Searcher {
         int size = board.length;
         int rowIndex = coordinate[0];
         int columnIndex = coordinate[1];
-        String piece = board[coordinate[0]][coordinate[1]];
-        Integer[][] left = new Integer[coordinate[0]][2];
-        Integer[][] right = new Integer[size - coordinate[0] - 1][2];
-        Integer[][] upper = new Integer[coordinate[0]][2];
-        Integer[][] lower = new Integer[size - coordinate[0] - 1][2];
+        String piece = board[rowIndex][columnIndex];
+
+        Integer[][] left = new Integer[columnIndex][2];
+        Integer[][] right = new Integer[size - columnIndex - 1][2];
+        Integer[][] upper = new Integer[rowIndex][2];
+        Integer[][] lower = new Integer[size - rowIndex - 1][2];
 
         for (int i = 0; i < size; ++i) {
             Integer[] horizontalCoor = {rowIndex, i};
             Integer[] verticalCoor = {i, columnIndex};
 
-            if (i < coordinate[0]) {
+            if (i < columnIndex) {
                 left[left.length - i - 1] = horizontalCoor;
+            } else if (i > columnIndex) {
+                right[i - columnIndex - 1] = horizontalCoor;
+            }
+
+            if (i < rowIndex) {
                 upper[upper.length - i - 1] = verticalCoor;
-            } else if (i > coordinate[0]) {
-                right[i - left.length - 1] = horizontalCoor;
-                lower[i - upper.length - 1] = verticalCoor;
+            } else if (i > rowIndex) {
+                lower[i - rowIndex - 1] = verticalCoor;
             }
         }
 
@@ -179,23 +188,29 @@ class Searcher {
         int rowIndex = coordinate[0];
         int columnIndex = coordinate[1];
         String piece = board[coordinate[0]][coordinate[1]];
-        Integer[][] left = new Integer[coordinate[0]][2];
-        Integer[][] right = new Integer[size - coordinate[0] - 1][2];
-        Integer[][] upper = new Integer[coordinate[0]][2];
-        Integer[][] lower = new Integer[size - coordinate[0] - 1][2];
+
+        Integer[][] left = new Integer[columnIndex][2];
+        Integer[][] right = new Integer[size - columnIndex - 1][2];
+        Integer[][] upper = new Integer[rowIndex][2];
+        Integer[][] lower = new Integer[size - rowIndex - 1][2];
 
         for (int i = 0; i < size; ++i) {
             Integer[] horizontalCoor = {rowIndex, i};
             Integer[] verticalCoor = {i, columnIndex};
 
-            if (i < coordinate[0]) {
+            if (i < columnIndex) {
                 left[left.length - i - 1] = horizontalCoor;
+            } else if (i > columnIndex) {
+                right[i - columnIndex - 1] = horizontalCoor;
+            }
+
+            if (i < rowIndex) {
                 upper[upper.length - i - 1] = verticalCoor;
-            } else if (i > coordinate[0]) {
-                right[i - left.length - 1] = horizontalCoor;
-                lower[i - upper.length - 1] = verticalCoor;
+            } else if (i > rowIndex) {
+                lower[i - rowIndex - 1] = verticalCoor;
             }
         }
+
 
         ArrayList<Integer[]> validFlips = new ArrayList<Integer[]>();
         ArrayList<Integer[]> leftValidFlips = checkFlips(piece, left);
@@ -213,18 +228,26 @@ class Searcher {
 
     private ArrayList<Integer[]> checkFlips(String piece, Integer[][] vector) {
         ArrayList<Integer[]> flipMoves = new ArrayList<Integer[]>();
-        System.out.println();
 
         for (int coorIndex = 0; coorIndex < vector.length; ++coorIndex) {
             Integer[] currentPos = vector[coorIndex];
             String currentPiece = board[currentPos[0]][currentPos[1]];
 
-            if (currentPiece == "_" && flipMoves.) {
+            if (currentPiece == "_") {
+                if (coorIndex != 0) {
+                    Integer[] previousPos = vector[coorIndex - 1];
+                    String previousPiece = board[previousPos[0]][previousPos[1]];
+
+                    if (previousPiece == piece) {
+                        return flipMoves;
+                    }
+                }
                 return new ArrayList<Integer[]>();
             } else if (currentPiece == piece) {
                 break;
+            } else if (coorIndex == vector.length - 1) {
+                return new ArrayList<Integer[]>();
             } else {
-                System.out.println("Flip?: " + Arrays.toString(currentPos));
                 flipMoves.add(currentPos);
             }
         }

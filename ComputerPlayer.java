@@ -26,7 +26,6 @@ class RandomStrategy implements ChoosingStrategy {
     public Integer[] getMove(Board board, String color) {
         Random generator = new Random();
         Integer[][] legalMoves = board.getLegalMoves(color);
-        System.out.println(color + " legalMovesLength: " + legalMoves.length);
         if (legalMoves.length == 0) {
             Integer[] noMove = {new Integer(-1), new Integer(-1)};
             return noMove;
